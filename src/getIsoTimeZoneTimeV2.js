@@ -12,9 +12,9 @@
  */
 function getIsoTimeZoneTimeV2(timeZone) {
   // Get timezone short name
-  let now = new Date();
+  const now = new Date();
   let tz = now.toLocaleDateString('en-US', { timeZone: timeZone, timeZoneName: 'short' });
-  let index = tz.indexOf('GMT');
+  const index = tz.indexOf('GMT');
   tz = tz.substr(index + 3); // extract short timezone name eg GMT+2
   let nowTZ;
   if (tz.length === 0) {

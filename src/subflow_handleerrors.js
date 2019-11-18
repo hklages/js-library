@@ -1,7 +1,7 @@
 /** Send error message to TASKER if debugToMobile is true
 * GITHUB subflow handle errors
-* @since 2019-10-13T1931
-* PREREQ: uses TASKER autoremote and needs key, stored in global variable
+* @since 2019-11-18T0829
+* PREREQ: uses Pushover
 */
 function dummy (env, msg, node) { // NODERED has to be deleted
   const unknown = 'unbekannt';
@@ -45,28 +45,13 @@ function dummy (env, msg, node) { // NODERED has to be deleted
     }
   }
   const fullMessage = `Fehler in TAB: ${errorTab} NODENAME: ${errorNodeName} NODETYPE: ${errorNodeType} NODEID: ${errorNodeId} DETAIL: ${errorMessage}`;
-
-  let msgUIandLog = { payload: fullMessage };
+  const msgUIandLog = { payload: fullMessage };
 
   let msgMobile;
   if (env.get('DebugToMobile')) {
-    const keyVariableName = env.get('KeyVariable'); // first get name of global variable
-    if (typeof keyVariableName === 'undefined' || keyVariableName === null || keyVariableName === '') {
-      node.error('Error in subflow: handle error: Invalid key variable name');
-      msgMobile = null; // no message
-      msgUIandLog = null; // no message
-    } else {
-      const key = global.get(keyVariableName);
-      if (typeof key === 'undefined' || key === null || key === '') {
-        node.error('Error in subflow: handle error: Key variable not defined or key invalid');
-        msgMobile = null; // no message
-        msgUIandLog = null; // no message
-      } else {
-        msgMobile = { payload: fullMessage, key: key };
-      }
-    }
+    msgMobile = { payload: fullMessage };
   } else {
-    msgMobile = null; // not message
+    msgMobile = null; // no message
   }
   return [msgMobile, msgUIandLog];
 } // NODERED has to be deleted;

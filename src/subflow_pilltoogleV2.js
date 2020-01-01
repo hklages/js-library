@@ -1,9 +1,9 @@
 function nodered (msg, env, node, flow) { // dont copy this line to nodeRED and also the line after return
-  /**  Update global variable if payload is different from current value or buttonpressed
+  /**  Update global variable if payload is different from current value or buttonpress.
   * INPUT msg.payload either "buttonpresse" or true/false
   * OUTPUT msg.payload contains new value and if changed msg.change = true otherwise false
   * USES global variableGlobal
-  * VERSION: 2019-12-24
+  * VERSION: 2019-12-30T0756
   * PORTS: 1
   */
 

@@ -1,0 +1,23 @@
+{
+  "name": "js-library",
+  "version": "1.0.0",
+  "description": "node red functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hklages/js-library.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hklages/js-library/issues"
+  },
+  "homepage": "https://github.com/hklages/js-library#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.13.0"
+  }
+}

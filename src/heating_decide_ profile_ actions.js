@@ -1,6 +1,6 @@
 /** Identify profile and submit actions.
  * 
- *  @since 2020-11-19T1103
+ *  @since 2021-02-06T0828
  * 
  *  @params {Object} msg not used, overwritten
  * 
@@ -40,7 +40,7 @@ function xxxx (msg, flow, node) { // please remove this line when copying back
     msg1 = { payload: { mode: '0', profile: '2' } }
   } else {
     // set each heater to automatic and profile 1
-    flow.set('currentProfile', 'Standard')
+    flow.set('currentProfile', 'Eco')
     msg1 = { payload: { mode: '0', profile: '1' } }
   }
   return [msg, msg1]

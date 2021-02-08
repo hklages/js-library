@@ -1,6 +1,6 @@
 /** Identify profile and submit actions.
  * 
- *  @since 2021-02-06T0828
+ *  @since 2021-02-08T0953
  * 
  *  @params {Object} msg not used, overwritten
  * 
@@ -24,23 +24,23 @@ function xxxx (msg, flow, node) { // please remove this line when copying back
   let msg1 = null
   if (global.get('basics_IsTravel')) {
     // set each heater to manual and to room specific travel temperature
-    flow.set('currentProfile', 'verreist')
+    flow.set('currentProfile', 'travel')
     msg = { payload: { mode: '1', temperatures: getTemperatureFromProfiles('travel') } }
   } else if (parseInt(flow.get('timeLimitedFor')) > 0) {
     //  set each heater to manual and to room specific time limited temperature
-    flow.set('currentProfile', 'zeitbegrenzt')
+    flow.set('currentProfile', 'timeLimited')
     msg = { payload: { mode: '1', temperatures: getTemperatureFromProfiles('timeLimited') } }
   } else if (global.get('basics_IsAtHome')) {
     // set each heater to automatic and profile 3
-    flow.set('currentProfile', 'zuHause')
+    flow.set('currentProfile', 'atHome')
     msg1 = { payload: { mode: '0', profile: '3' } }
   } else if (global.get('basics_IsHoliday')) {
     // set each heater to automatic and profile 2
-    flow.set('currentProfile', 'Feiertag')
+    flow.set('currentProfile', 'holiday')
     msg1 = { payload: { mode: '0', profile: '2' } }
   } else {
     // set each heater to automatic and profile 1
-    flow.set('currentProfile', 'Eco')
+    flow.set('currentProfile', 'eco')
     msg1 = { payload: { mode: '0', profile: '1' } }
   }
   return [msg, msg1]

@@ -4,7 +4,7 @@
  * 
  *  @params {Object} msg not used, overwritten
  * 
- *  @flow_variable {string} currentProfile
+ *  @global_variable {string} heating_currentProfile
  *  @flow_variable {Object} roomProfiles
  *  @global_variable {boolean} basics_IsTravel 
  * 
@@ -24,23 +24,23 @@ function xxxx (msg, flow, node) { // please remove this line when copying back
   let msg1 = null
   if (global.get('basics_IsTravel')) {
     // set each heater to manual and to room specific travel temperature
-    flow.set('currentProfile', 'travel')
+    global.set('heating_currentProfile', 'travel')
     msg = { payload: { mode: '1', temperatures: getTemperatureFromProfiles('travel') } }
   } else if (parseInt(flow.get('timeLimitedFor')) > 0) {
     //  set each heater to manual and to room specific time limited temperature
-    flow.set('currentProfile', 'timeLimited')
+    global.set('heating_currentProfile', 'timeLimited')
     msg = { payload: { mode: '1', temperatures: getTemperatureFromProfiles('timeLimited') } }
   } else if (global.get('basics_IsAtHome')) {
     // set each heater to automatic and profile 3
-    flow.set('currentProfile', 'atHome')
+    global.set('heating_currentProfile', 'atHome')
     msg1 = { payload: { mode: '0', profile: '3' } }
   } else if (global.get('basics_IsHoliday')) {
     // set each heater to automatic and profile 2
-    flow.set('currentProfile', 'holiday')
+    global.set('heating_currentProfile', 'holiday')
     msg1 = { payload: { mode: '0', profile: '2' } }
   } else {
     // set each heater to automatic and profile 1
-    flow.set('currentProfile', 'eco')
+    global.set('heating_currentProfile', 'eco')
     msg1 = { payload: { mode: '0', profile: '1' } }
   }
   return [msg, msg1]

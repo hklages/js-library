@@ -1,49 +1,57 @@
-/** Identify profile and submit actions.
+/** Define profile and submit actions.
  * 
- *  @since 2021-02-08T0953
+ *  @since 2021-04-11T0906
  * 
- *  @params {Object} msg not used, overwritten
+ *  @params {Object} msg overwritten
  * 
- *  @global_variable {string} heating_currentProfile
- *  @flow_variable {Object} roomProfiles
- *  @global_variable {boolean} basics_IsTravel 
+ *  @flow_variable {Object} roomProfiles - for each room: travelling, timeLimited
+ *                          rooms in lexical order by name
  * 
- *  @output {Array}  2 outputs [msg, msg1] 
- *  @output {Object} msg.payload = {"mode":"1" , "temperatures": [] } | {}
- *  @output {Object} msg1.payload = {} | {"mode":"0" , "profile": "1"|"2"|"3" } 
+ *  @output {Array}   outputs [msg, msg1, msg2, msg3]
+ *                    msg payload = new profile
+ *                    msg1.payload  is mode auto, manu
+ *                    msg2.payload  is week profile 1 for eco, 2 for holiday, 3 for at home
+ *                    msg3.payload  is temperature array, different for each thermostate 
  * 
  *  @throws {string} node.error if roomProfiles do not provide data
  * 
- *  @prerequisites data in roomProfiles must be alphabetically ordered by roomName
+ *  
  */
 
 // eslint-disable-next-line no-unused-vars
 function xxxx (msg, flow, node) { // please remove this line when copying back
 
-  msg = null
   let msg1 = null
-  if (global.get('basics_IsTravel')) {
+  let msg2 = null
+  let msg3 = null
+  let payload = 'unknown'
+  if (msg.heatingStatus.isTravelling === 'on') {
     // set each heater to manual and to room specific travel temperature
-    global.set('heating_currentProfile', 'travel')
-    msg = { payload: { mode: '1', temperatures: getTemperatureFromProfiles('travel') } }
-  } else if (parseInt(flow.get('timeLimitedFor')) > 0) {
-    //  set each heater to manual and to room specific time limited temperature
-    global.set('heating_currentProfile', 'timeLimited')
-    msg = { payload: { mode: '1', temperatures: getTemperatureFromProfiles('timeLimited') } }
-  } else if (global.get('basics_IsAtHome')) {
+    payload = 'travel'
+    msg1 = { payload: 'manu' }
+    msg3 = { payload: getTemperatureFromProfiles(payload) }
+  } else if (msg.heatingStatus.timeLimitedFor > 0) {
+    // set each heater to manual and to room specific time limited temperature
+    payload = 'timeLimited'
+    msg1 = { payload: 'manu' }
+    msg3 = { payload: getTemperatureFromProfiles(payload) }
+  } else if (msg.heatingStatus.isAtHome === 'on') {
     // set each heater to automatic and profile 3
-    global.set('heating_currentProfile', 'atHome')
-    msg1 = { payload: { mode: '0', profile: '3' } }
-  } else if (global.get('basics_IsHoliday')) {
+    payload = 'atHome' 
+    msg1 = { payload: 'auto' }
+    msg2 = { payload: '3' }
+  } else if (msg.heatingStatus.isHoliday === 'on') {
     // set each heater to automatic and profile 2
-    global.set('heating_currentProfile', 'holiday')
-    msg1 = { payload: { mode: '0', profile: '2' } }
+    payload = 'holiday'
+    msg1 = { payload: 'auto' }
+    msg2 = { payload: '2' }
   } else {
     // set each heater to automatic and profile 1
-    global.set('heating_currentProfile', 'eco')
-    msg1 = { payload: { mode: '0', profile: '1' } }
+    payload = 'eco'
+    msg1 = { payload: 'auto' }
+    msg2 = { payload: '1' }
   }
-  return [msg, msg1]
+  return [{ payload }, msg1, msg2, msg3]
 
    
   function getTemperatureFromProfiles(profileType) {
@@ -51,11 +59,11 @@ function xxxx (msg, flow, node) { // please remove this line when copying back
     let data = []
     if (profileType == 'travel') {
       for (let i = 0; i < profiles.length; i++) {
-        data[i] = profiles[i].travelling
+        data[i] = Number(profiles[i].travelling)
       }    
     } else if (profileType == 'timeLimited') {
       for (let i = 0; i < profiles.length; i++) {
-        data[i] = profiles[i].timeLimited
+        data[i] = Number(profiles[i].timeLimited)
       }
     } else {
       node.error('getTemperatureFromProfiles: no data', msg)

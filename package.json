@@ -16,8 +16,7 @@
     "url": "https://github.com/hklages/js-library/issues"
   },
   "homepage": "https://github.com/hklages/js-library#readme",
-  "dependencies": {},
   "devDependencies": {
-    "eslint": "^7.13.0"
+    "eslint": "^7.26.0"
   }
 }
